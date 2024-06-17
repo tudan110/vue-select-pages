@@ -31,7 +31,8 @@
       <div class="select-search" v-if="filterable">
         <span class="search-icon"><img
             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjkzNDQ2NjE1MTg5IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQwMjgiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PHBhdGggZD0iTTUxMS45NzU4OTIgMTkxLjI5Njk0NWEyMy4yMzQ2NjEgMjMuMjM0NjYxIDAgMSAwIDAgNDYuOTM0MDE0IDIwMi4zMTU4MDggMjAyLjMxNTgwOCAwIDAgMSAyMDIuMzE1ODA4IDIwMi4zMTU4MDggMjMuMjM0NjYxIDIzLjIzNDY2MSAwIDAgMCA0Ni45MzQwMTUgMCAyNDkuMTkxNzM2IDI0OS4xOTE3MzYgMCAwIDAtMjQ5LjI0OTgyMy0yNDkuMjQ5ODIyeiIgZmlsbD0iIzUxNTE1MSIgcC1pZD0iNDAyOSI+PC9wYXRoPjxwYXRoIGQ9Ik0xMDA5LjMxMzgwNSA5NTguMzg5MjY4bC0xNzIuODA3Nzg5LTE3Mi44MDc3ODlhNDc1LjAzMjYzOCA0NzUuMDMyNjM4IDAgMSAwLTU0LjM2OTEwNiA1My41NTU4OTNsMTczLjIxNDM5NSAxNzMuMjE0Mzk2YTM4LjE2MjkzIDM4LjE2MjkzIDAgMSAwIDUzLjk2MjUtNTMuOTYyNXogbS01MzMuMTE5MjktOTAuMDM0MzFhMzkzLjA3MjM3MyAzOTMuMDcyMzczIDAgMSAxIDM5My45NDM2NzItMzkyLjA4NDkgMzkzLjA3MjM3MyAzOTMuMDcyMzczIDAgMCAxLTM5My45NDM2NzIgMzkyLjA4NDl6IiBmaWxsPSIjNTE1MTUxIiBwLWlkPSI0MDMwIj48L3BhdGg+PC9zdmc+"></span>
-        <input type="text" ref="filterInput" :placeholder="searchTips" v-model="keyword" @input="filters">
+        <input type="text" ref="filterInput" :placeholder="searchTips" v-model="keyword"
+               @input="debounceFilter(filters)">
       </div>
       <div class="scroll-body" v-if="optionData.length>0">
         <div class="select-option" :class="{'selected': radio && selectIds.indexOf(list[prop.value]) != -1}"
@@ -144,6 +145,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    delay: {
+      type: Number,
+      default: 200
     }
   },
   watch: {
@@ -166,7 +171,8 @@ export default {
       optionData: [], //下拉数据
       dropStyle: {},
       loading: false,
-      initLeft: ''
+      initLeft: '',
+      timer: null, // 防抖定时器
     }
   },
   mounted() {
@@ -207,6 +213,15 @@ export default {
       this.optionData = JSON.parse(JSON.stringify(data))
       this.totalPage = Math.ceil(this.optionData.length / this.pageSize)
       this.setValue()
+    },
+    debounceFilter(fn, delay) {
+      delay = delay || this.delay
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => {
+        fn()
+      }, delay);
     },
     filters() {
       if (this.remote && typeof this.remoteMethod === 'function') {
@@ -374,7 +389,7 @@ export default {
     outline: none;
     position: relative;
     text-overflow: ellipsis;
-    width: 200px;
+    //width: 200px;
   }
 
   .select-disabled {
