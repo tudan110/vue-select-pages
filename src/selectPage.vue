@@ -380,6 +380,7 @@ export default {
   .select-box {
     background: #fff;
     border: 1px solid #E6E6E6;
+    border-radius: 4px;
     cursor: pointer;
     display: block;
     font-size: 12px;
