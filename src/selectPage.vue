@@ -23,7 +23,8 @@
         </div>
       </div>
       <!--关闭-->
-      <i class="select-close" :class="{'select-expend': show}"></i>
+      <i v-if="selectData && selectData.length > 0" class="el-icon-circle-close clear-select" @click.stop="removeSelect(0)"></i>
+      <i v-else class="select-close" :class="{'select-expend': show}"></i>
     </div>
 
     <!--展开内容-->
@@ -461,6 +462,20 @@ export default {
         }
       }
     }
+  }
+
+  .clear-select {
+    color: #999;
+    display: inline-block;
+    font-size: 14px;
+    height: 14px;
+    overflow: hidden;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -6px;
+    cursor: pointer;
+    width: 14px;
   }
 
   .select-close {
