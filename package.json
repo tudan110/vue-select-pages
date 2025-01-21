@@ -15,7 +15,7 @@
   "author": "Mark",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gxt1103/vue-select-pages/issues"
+    "url": "https://github.com/tudan110/vue-select-pages/issues"
   },
   "dependencies": {},
   "devDependencies": {},
@@ -25,6 +25,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gxt1103/vue-select-pages.git"
+    "url": "git+https://github.com/tudan110/vue-select-pages.git"
   }
 }
